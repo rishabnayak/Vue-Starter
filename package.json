@@ -2,10 +2,20 @@
   "name": "vue-starter",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rishab2113/Vue-Starter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rishab2113/Vue-Starter/issues"
+  },
+  "homepage": "https://github.com/rishab2113/Vue-Starter#readme"
 }
