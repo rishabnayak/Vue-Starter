@@ -1,15 +1,15 @@
 <template>
   <section class="jumbotron text-center">
         <div class="container">
-          <h1 class="jumbotron-heading">{{message[0]}}</h1>
-          <p class="lead text-muted">This is Vue.js Starter</p>
+          <h1 class="jumbotron-heading">{{message[1]}}</h1>
+          <p class="lead text-muted">NoteStore</p>
         </div>
   </section>
 </template>
 
 <script>
 export default {
-  name: 'homepage',
+  name: 'notes',
   props: ['message'],
   data () {
     return {
