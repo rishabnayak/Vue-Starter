@@ -1,16 +1,14 @@
 <template>
-  <section class="jumbotron text-center">
-        <div class="container">
-          <h1 class="jumbotron-heading">{{message[1]}}</h1>
-          <p class="lead text-muted">NoteStore</p>
-        </div>
-  </section>
+  <div class="splash">
+    <h1>{{messages[1]}}</h1>
+    <p class="lead">NoteStore</p>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'notes',
-  props: ['message'],
+  props: ['messages'],
   data () {
     return {
     }
@@ -19,8 +17,11 @@ export default {
 </script>
 
 <style>
+.splash{
+  text-align: center;
+}
 h1{
   color: #444;
-  padding-top: 50px;
+  padding-top: 80px;
 }
 </style>

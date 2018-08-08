@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <navigation/>
-    <router-view :message='message'/>
+    <router-view :messages='messages'/>
   </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
   },
   data(){
     return{
-      message:['Hello!','Notes']
+      messages:['Hello!','Notes']
     }
   }
 }
