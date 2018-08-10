@@ -20,7 +20,6 @@ export default {
     }
   },
   async mounted () {
-    // sign up user to Firebase - register in Firestore immediately after redirect
     if (!this.user) {
       var ui = new firebaseui.auth.AuthUI(firebase.auth())
       ui.start('#firebaseui-auth-container', {
