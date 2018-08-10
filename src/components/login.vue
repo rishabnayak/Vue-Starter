@@ -6,7 +6,6 @@
       </router-link>
     </div>
     <div v-else id="firebaseui-auth-container"></div>
-    <hr>
   </div>
 </template>
 
