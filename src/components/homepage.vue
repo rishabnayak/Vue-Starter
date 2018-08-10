@@ -22,6 +22,5 @@ export default {
 }
 h1{
   color: #444;
-  padding-top: 80px;
 }
 </style>

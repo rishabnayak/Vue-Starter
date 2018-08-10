@@ -1,25 +1,28 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
-      <a class="navbar-brand"><router-link to="/">Vue Starter</router-link></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbar">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link"><router-link to="/">Home</router-link><span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link"><router-link to="/notes">Notes</router-link></a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+  <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+      <h5 class="my-0 mr-md-auto font-weight-normal"><router-link to="/">Vue Starter</router-link></h5>
+      <nav v-if="user" class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark"><router-link to="/home">Home</router-link><span class="sr-only">(current)</span></a>
+        <a class="p-2 text-dark"><router-link to="/notes">Notes</router-link></a>
+      </nav>
+      <a v-if="user" class="btn btn-outline-primary" @click="signOut()">Logout</a>
+    </div>
 </template>
 
 <script>
 export default {
   name: 'navigation',
+  computed:{
+    user () {
+      return this.$store.state.user
+    }
+  },
+  methods: {
+    async signOut () {
+      await this.$store.dispatch('logOut')
+      this.$router.push('/')
+    }
+  },
   data () {
     return {
     }
