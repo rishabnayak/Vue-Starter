@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <navigation/>
-    <router-view :messages='messages'/>
+    <router-view/>
   </div>
 </template>
 
@@ -16,7 +16,6 @@ export default {
   },
   data(){
     return{
-      messages:['Hello!']
     }
   }
 }

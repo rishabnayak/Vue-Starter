@@ -1,58 +1,24 @@
 <template>
-  <div class="container">
-            <h4 class="mb-3">User Profile</h4>
-            <form v-if="user">
-              <div class="row">
-                <div class="col-md-4 mb-3">
-                  <label for="username">Username</label>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">@</span>
-                    </div>
-                    <input type="text" class="form-control" id="username" v-model="uname" @input="checkAvailability()">
-                    <div class="availability">
-                      <i v-if="unameempty" class="material-icons red">close</i>
-                      <i v-else-if="available" class="material-icons green">check</i>
-                      <i v-else-if="unavailable" class="material-icons red">close</i>
-                    </div>
-                  </div>
-                  <p v-if="unameempty" class="red availability">Enter a Username</p>
-                  <p v-else-if="available" class="green availability">Username available!</p>
-                  <p v-else-if="unavailable" class="red availability">Username unavailable!</p>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="bio">Short Introduction</label>
-                <textarea class="form-control" rows="5" id="bio" v-model="bio"></textarea>
-              </div>
-              <div class="row">
-                <div class="col-md-4 mb-3">
-                  <label for="city">City</label>
-                  <input type="text" class="form-control" id="city" v-model="city">
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="state">State</label>
-                  <input type="text" class="form-control" id="state" v-model="stt">
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="country">Country</label>
-                  <input type="text" class="form-control" id="country" v-model="country">
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-4 mb-3">
-                  <label for="number">Phone Number</label>
-                  <input type="text" class="form-control" id="number" v-model="number">
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label for="affiliation">Current Affiliation</label>
-                  <input type="text" class="form-control" id="affiliation" placeholder="University/College/Company" v-model="affiliation">
-                </div>
-              </div>
-              <hr class="mb-4">
-            </form>
-            <button :disabled="!available||unameempty" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()">Update</button>
-          </div>
+  <main class="container">
+    <div class="jumbotron">
+      <h1 align="center">{{displayname}}</h1>
+      <h4 class="section-head">Bio</h4>
+      <p class="content">{{bio}}</p>
+      <h4 class="section-head">City</h4>
+      <p class="content">{{city}}</p>
+      <h4 class="section-head">State</h4>
+      <p class="content">{{stt}}</p>
+      <h4 class="section-head">Country</h4>
+      <p class="content">{{country}}</p>
+      <h4 class="section-head">Phone Number</h4>
+      <p class="content">{{number}}</p>
+      <h4 class="section-head">Current Affiliation</h4>
+      <p class="content">{{affiliation}}</p>
+      <router-link to="/editprofile">
+      <button v-if="userCheck" class="btn btn-primary btn-lg btn-block col-md-3">Update</button>
+      </router-link>
+    </div>
+  </main>
 </template>
 
 <script>
@@ -65,87 +31,47 @@ export default {
       return this.$store.state.user
     }
   },
-  methods: {
-    async updateProfile () {
-      const ref = db.collection('users').doc(this.user.uid)
-      await ref.set({
-        bio: this.bio,
-        city: this.city,
-        stt: this.stt,
-        country: this.country,
-        number: this.number,
-        affiliation: this.affiliation,
-        uname: this.uname
-      },{ merge: true })
-      this.$router.push('/profile')
-    },
-    async checkAvailability () {
-      let checkname = await db.collection('users').where("uname", "==", this.uname).get()
-      if (this.uname == null || this.uname == "") {
-        this.unameempty = true
-      } else if (checkname.empty || checkname.docs[0].data().uid == this.user.uid) {
-        this.available = true
-        this.unameempty = false
-        this.unavailable = false
-      }
-      else {
-        this.available = false
-        this.unameempty = false
-        this.unavailable = true
-      }
-    }
-  },
   data () {
     return {
+      uname: this.$route.params.uname,
+      displayname: null,
       bio: null,
       city: null,
       stt: null,
       country: null,
       number: null,
       affiliation: null,
-      uname: null,
-      available: null,
-      unavailable: null,
-      unameempty: null
+      userCheck: null
     }
   },
-  mounted: function(){
-    this.checkAvailability()
-  },
   async created(){
-    this.bio = this.user.bio
-    this.city = this.user.city
-    this.stt = this.user.stt
-    this.country = this.user.country
-    this.number = this.user.number
-    this.affiliation = this.user.affiliation
-    this.uname = this.user.uname
+    let finduser = await db.collection('users').where("uname", "==", this.uname).get()
+    this.bio = finduser.docs[0].data().bio
+    this.city = finduser.docs[0].data().city
+    this.stt = finduser.docs[0].data().stt
+    this.country = finduser.docs[0].data().country
+    this.number = finduser.docs[0].data().number
+    this.affiliation = finduser.docs[0].data().affiliation
+    this.displayname = finduser.docs[0].data().displayName
+    if (this.$route.params.uname == this.user.uname) {
+      this.userCheck = true
+    } else {
+      this.userCheck = false
+    }
   }
 }
 </script>
 
 <style>
-.container{
-  padding-top: 40px;
-  padding-bottom: 40px;
-}
-.material-icons.green { color: green;
+h1{
+  color: #444;
 }
 
-.material-icons.red { color: red;
+.section-head{
+  padding-left: 8px
 }
 
-.availability{
-  padding-top: 6px;
-  padding-left: 3px;
+.content{
+  padding-left: 12px
 }
-
-.green{
-  color: green;
-}
-
-.red{
-  color: red;
-}
-
 </style>
