@@ -21,10 +21,6 @@ export default {
   },
   methods: {
     async signOut () {
-      const mydb = db.collection('users').doc(this.user.uid)
-      await mydb.set({
-        state: "online"
-      },{ merge: true })
       await this.$store.dispatch('logOut')
       this.$router.push('/')
     }

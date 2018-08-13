@@ -2,6 +2,25 @@
   <div class="container">
             <h4 class="mb-3">User Profile</h4>
             <form v-if="user">
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="username">Username</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">@</span>
+                    </div>
+                    <input type="text" class="form-control" id="username" v-model="uname" @input="checkAvailability()">
+                    <div class="availability">
+                      <i v-if="unameempty" class="material-icons red">close</i>
+                      <i v-else-if="available" class="material-icons green">check</i>
+                      <i v-else-if="unavailable" class="material-icons red">close</i>
+                    </div>
+                  </div>
+                  <p v-if="unameempty" class="red availability">Enter a Username</p>
+                  <p v-else-if="available" class="green availability">Username available!</p>
+                  <p v-else-if="unavailable" class="red availability">Username unavailable!</p>
+                </div>
+              </div>
               <div class="mb-3">
                 <label for="bio">Short Introduction</label>
                 <textarea class="form-control" rows="5" id="bio" v-model="bio"></textarea>
@@ -32,7 +51,7 @@
               </div>
               <hr class="mb-4">
             </form>
-            <button class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()">Update</button>
+            <button :disabled="!available||unameempty" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()">Update</button>
           </div>
 </template>
 
@@ -41,7 +60,6 @@ import firebase from 'firebase'
 import db from '@/firebase/init.js'
 export default {
   name: 'profile',
-  props: ['messages'],
   computed:{
     user () {
       return this.$store.state.user
@@ -56,9 +74,25 @@ export default {
         stt: this.stt,
         country: this.country,
         number: this.number,
-        affiliation: this.affiliation
+        affiliation: this.affiliation,
+        uname: this.uname
       },{ merge: true })
       this.$router.push('/profile')
+    },
+    async checkAvailability () {
+      let checkname = await db.collection('users').where("uname", "==", this.uname).get()
+      if (this.uname == null || this.uname == "") {
+        this.unameempty = true
+      } else if (checkname.empty || checkname.docs[0].data().uid == this.user.uid) {
+        this.available = true
+        this.unameempty = false
+        this.unavailable = false
+      }
+      else {
+        this.available = false
+        this.unameempty = false
+        this.unavailable = true
+      }
     }
   },
   data () {
@@ -68,8 +102,15 @@ export default {
       stt: null,
       country: null,
       number: null,
-      affiliation: null
+      affiliation: null,
+      uname: null,
+      available: null,
+      unavailable: null,
+      unameempty: null
     }
+  },
+  mounted: function(){
+    this.checkAvailability()
   },
   async created(){
     this.bio = this.user.bio
@@ -78,6 +119,7 @@ export default {
     this.country = this.user.country
     this.number = this.user.number
     this.affiliation = this.user.affiliation
+    this.uname = this.user.uname
   }
 }
 </script>
@@ -87,4 +129,23 @@ export default {
   padding-top: 40px;
   padding-bottom: 40px;
 }
+.material-icons.green { color: green;
+}
+
+.material-icons.red { color: red;
+}
+
+.availability{
+  padding-top: 6px;
+  padding-left: 3px;
+}
+
+.green{
+  color: green;
+}
+
+.red{
+  color: red;
+}
+
 </style>
