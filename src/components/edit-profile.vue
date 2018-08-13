@@ -3,7 +3,7 @@
             <h4 class="mb-3">User Profile</h4>
             <form v-if="user">
               <div class="row">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-auto mb-3">
                   <label for="username">Username</label>
                   <div class="input-group">
                     <div class="input-group-prepend">
@@ -51,7 +51,7 @@
               </div>
               <hr class="mb-4">
             </form>
-            <button :disabled="!available||unameempty" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()">Update</button>
+            <button :disabled="unavailable||unameempty" class="btn btn-primary btn-lg btn-block col-md-3" type="submit" @click="updateProfile()">Update</button>
           </div>
 </template>
 
@@ -68,7 +68,7 @@ export default {
   methods: {
     async updateProfile () {
       const ref = db.collection('users').doc(this.user.uid)
-      await ref.set({
+      await ref.update({
         bio: this.bio,
         city: this.city,
         stt: this.stt,
@@ -76,14 +76,14 @@ export default {
         number: this.number,
         affiliation: this.affiliation,
         uname: this.uname
-      },{ merge: true })
-      this.$router.push({ name: "profile", params: { uname: this.user.uname }})
+      })
+      this.$router.push({ name: "profile", params: { uname: this.uname }})
     },
     async checkAvailability () {
       let checkname = await db.collection('users').where("uname", "==", this.uname).get()
       if (this.uname == null || this.uname == "") {
         this.unameempty = true
-      } else if (checkname.empty || checkname.docs[0].data().uid == this.user.uid) {
+      } else if (checkname.empty || checkname.docs[0].data().uname == this.user.uname) {
         this.available = true
         this.unameempty = false
         this.unavailable = false
