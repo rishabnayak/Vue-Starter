@@ -10,7 +10,7 @@ const state = {
 }
 
 const getters = {
-  getUser: state => tate.user
+  getUser: state => state.user
 }
 
 const mutations = {

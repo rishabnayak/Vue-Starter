@@ -16,7 +16,7 @@ export default {
   },
   data(){
     return{
-      messages:['Hello!','Notes']
+      messages:['Hello!']
     }
   }
 }

@@ -1,8 +1,8 @@
 <template>
   <div class="splash">
     <div v-if="user">
-      <router-link to="/notes">
-        <i class="material-icons">notes</i>
+      <router-link to="/profile">
+        <i class="material-icons">profile</i>
       </router-link>
     </div>
     <div v-else id="firebaseui-auth-container"></div>
@@ -23,8 +23,8 @@ export default {
     if (!this.user) {
       var ui = new firebaseui.auth.AuthUI(firebase.auth())
       ui.start('#firebaseui-auth-container', {
-        signInSuccessUrl: '/notes',
-        signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID]
+        signInSuccessUrl: '/profile',
+        signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID,firebase.auth.EmailAuthProvider.PROVIDER_ID]
       })
     }
   }
