@@ -8,7 +8,7 @@
               </div>
               <h6 class="mb-3">Members</h6>
                 <p v-for="member in members" :key="member.id">
-                    <span class="members">{{ member.member }}</span>
+                    <router-link :to="{ name: 'profile', params: {uname:member.member} }"><span class="members">{{ member.member }}</span></router-link>
                 </p>
                 <div class="row">
                   <div class="col-md-4 mb-3">

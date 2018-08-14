@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import firebase from 'firebase'
+import db from '@/firebase/init.js'
+import store from '@/store/store.js'
 import login from '@/components/login'
 import editprofile from '@/components/edit-profile'
 import profile from '@/components/profile'
@@ -9,7 +12,7 @@ import editproject from '@/components/edit-project'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -20,7 +23,10 @@ export default new Router({
     {
       path: '/editprofile',
       name: 'editprofile',
-      component: editprofile
+      component: editprofile,
+      meta:{
+        requiresAuth: true
+      }
     },
     {
       path: '/profile/:uname',
@@ -35,12 +41,35 @@ export default new Router({
     {
       path: '/createproject',
       name: 'createproject',
-      component: createproject
+      component: createproject,
+      meta:{
+        requiresAuth: true
+      }
     },
     {
       path: '/editproject/:name',
       name: 'editproject',
-      component: editproject
+      component: editproject,
+      meta:{
+        requiresAuth: true
+      }
     },
   ]
 })
+
+router.beforeEach((to,from,next) => {
+  if (to.matched.some(rec => rec.meta.requiresAuth)) {
+    let user = store.state.user
+    if (user) {
+      next()
+    }
+    else {
+      next({name:'login'})
+      }
+    }
+    else {
+      next()
+  }
+})
+
+export default router
